@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Normal Distribution Explorer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f3f7fb;--card:#fff;--ink:#14263d;--mut:#5a6b80;--line:#d5e0ec;--acc:#0b7f8c;--accbg:#d9f1f3;--sh:#f2a900;--ok:#1b8a4b;--bad:#c23b3b;--okbg:#e2f5e9;--badbg:#fbe6e6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1b2b;--card:#172638;--ink:#e6eef8;--mut:#9fb1c5;--line:#2c4057;--acc:#4cc3cf;--accbg:#143d45;--sh:#f5b82e;--ok:#5fd18b;--bad:#ff8a8a;--okbg:#14382338;--badbg:#44202038}}
+:root[data-theme="dark"]{--bg:#0f1b2b;--card:#172638;--ink:#e6eef8;--mut:#9fb1c5;--line:#2c4057;--acc:#4cc3cf;--accbg:#143d45;--sh:#f5b82e;--ok:#5fd18b;--bad:#ff8a8a;--okbg:#14382338;--badbg:#44202038}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Nunito,system-ui,sans-serif}
+header{padding:22px 18px 8px;max-width:900px;margin:auto}h1{margin:0;font-size:1.9rem;font-weight:800}header p{margin:4px 0 0;color:var(--mut)}
+nav{display:flex;gap:6px;overflow-x:auto;max-width:900px;margin:auto;padding:10px 18px}
+nav button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:7px 14px;font:inherit;font-size:.9rem;cursor:pointer}
+nav button.on{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:800}
+main{max-width:900px;margin:auto;padding:0 18px 40px}.pg{display:none}.pg.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:12px 0}
+h2{font-size:1.35rem;margin:6px 0}h3{margin:4px 0 6px;font-size:1.05rem}
+.tip{background:var(--accbg);border-left:5px solid var(--acc);padding:10px 14px;border-radius:8px;margin:10px 0}
+.warn{background:#fff4d6;color:#4a3600;border-left:5px solid var(--sh);padding:10px 14px;border-radius:8px;margin:10px 0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+button.b{border:1px solid var(--acc);background:var(--card);color:var(--acc);border-radius:8px;padding:7px 14px;font:inherit;font-weight:600;cursor:pointer}
+button.b.on,button.b.pri{background:var(--acc);color:#fff}
+input[type=number],input[type=text],select{font:inherit;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:96px}
+input[type=range]{width:200px;accent-color:var(--acc)}
+.st{font-size:1.05rem;background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}
+.res{font-weight:800;color:var(--acc)}svg{width:100%;height:auto;display:block}
+table.t{border-collapse:collapse;font-size:.85rem;margin:8px 0;display:block;overflow-x:auto}.t td,.t th{border:1px solid var(--line);padding:4px 8px;text-align:center}.t .hl{background:var(--sh);color:#14263d;font-weight:800}
+.fb{margin-top:8px;padding:8px 12px;border-radius:8px}.fb.ok{background:var(--okbg);color:var(--ok)}.fb.no{background:var(--badbg);color:var(--bad)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:640px){.two{grid-template-columns:1fr}}
+.m{border:1px solid var(--line);border-radius:10px;padding:10px 12px}.m b{color:var(--acc)}
+</style></head><body>
+<header><h1>📊 The Normal Distribution Explorer</h1><p>Empirical rule → z-table → real-life questions. Remember: <b>a z-score is a number on the axis; a probability is an area, always written as a percent (to the nearest whole number).</b></p></header>
+<nav id="nav"></nav>
+<main>
+<section class="pg" id="p0">
+<div class="card"><h2>1️⃣ The Empirical Rule (68–95–99.7)</h2>
+<p>In a bell-shaped (normal) distribution, about <b>68%</b> of values lie within 1 standard deviation (σ) of the mean (μ), <b>95%</b> within 2σ, and <b>99.7%</b> within 3σ. Pick a situation and move the sliders.</p>
+<div class="row"><select id="e_pre" style="width:auto"><option value="100,12,IQ score">IQ scores (μ=100, σ=12)</option><option value="68,10,test mark (%)">Test marks (μ=68, σ=10)</option><option value="125,8,systolic blood pressure">Blood pressure (μ=125, σ=8)</option></select></div>
+<div class="row">μ <input type="range" id="e_mu" min="20" max="200" value="100"> <b id="e_muv"></b> σ <input type="range" id="e_sd" min="2" max="30" value="12"> <b id="e_sdv"></b></div>
+<div class="row"><button class="b on" data-k="1">±1σ</button><button class="b" data-k="2">±2σ</button><button class="b" data-k="3">±3σ</button></div>
+<svg id="e_svg" viewBox="0 0 640 230"></svg><div class="st" id="e_st"></div>
+<div class="tip">💡 Symmetry: the two tails share what is left over. Outside ±1σ is 100% − 68% = 32%, so each tail is <b>16%</b>.</div></div></section>
+
+<section class="pg" id="p1"><div class="card"><h2>2️⃣ Reading the z-table</h2>
+<p>A z-score tells you how many standard deviations a value is from the mean: <b>z = (x − μ) ÷ σ</b>. The table entry is the area <b>to the left</b> of z, written as a decimal (e.g. 0.8508). Move z to see where the entry sits (row = z to 1 decimal, column = the 2nd decimal).</p>
+<div class="row">z = <input type="number" id="z_in" step="0.01" min="-3.49" max="3.49" value="1.04"> <input type="range" id="z_rg" min="-3.49" max="3.49" step="0.01" value="1.04"></div>
+<svg id="z_svg" viewBox="0 0 640 230"></svg><div class="st" id="z_st"></div><div id="z_tb"></div>
+<div class="warn">⚠️ The table gives a <b>decimal</b>. Your final probability must be a <b>percent</b>: 0.8508 → 85%.</div></div></section>
+
+<section class="pg" id="p2"><div class="card"><h2>3️⃣ Left, right and between — two ways to work</h2>
+<p>Choose a region and enter z-scores. See the working with <b>decimals first</b> (then convert) and <b>percents first</b>.</p>
+<div class="row"><button class="b on" data-m="L">Left of z</button><button class="b" data-m="R">Right of z</button><button class="b" data-m="B">Between</button></div>
+<div class="row">z₁ = <input type="number" id="l_a" step="0.01" value="1.00"> <span id="l_b2">z₂ = <input type="number" id="l_b" step="0.01" value="2.00"></span></div>
+<svg id="l_svg" viewBox="0 0 640 230"></svg><div class="st" id="l_st"></div>
+<div class="two"><div class="m" id="l_A"></div><div class="m" id="l_B"></div></div>
+<div class="tip">💡 Total area = 100%, so Right = 100% − Left. Between = (bigger left area) − (smaller left area).</div></div></section>
+
+<section class="pg" id="p3"><div class="card"><h2>4️⃣ From real life to z and back</h2>
+<p>Two kinds of question: <b>(A)</b> given a value x, find the percent; <b>(B)</b> given a percent, find the value x (using the table in reverse). Always sketch first!</p>
+<div class="row"><button class="b on" data-t="F">A: x → percent</button><button class="b" data-t="V">B: percent → x</button></div>
+<div class="row">μ <input type="number" id="r_mu" value="100"> σ <input type="number" id="r_sd" value="12"> <span id="r_xw">x <input type="number" id="r_x" value="115"></span><span id="r_pw" style="display:none">percent <input type="number" id="r_p" value="30"></span> <select id="r_d" style="width:auto"></select></div>
+<svg id="r_svg" viewBox="0 0 640 230"></svg><div id="r_sol"></div></div></section>
+
+<section class="pg" id="p4"><div class="card"><h2>5️⃣ Apply it to your major</h2><div class="row" id="mj_tabs"></div><div id="mj"></div></div></section>
+
+<section class="pg" id="p5"><div class="card"><h2>6️⃣ Practice</h2><p>Click a shading button to sketch the region first, then give your answer. <b>Probabilities: whole-number percent</b> (84, not 0.84). Score: <b id="pr_sc">0 / 0</b></p><div id="pr"></div><div class="row"><button class="b pri" id="pr_new">New question ➜</button></div></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const erf=x=>{const s=Math.sign(x);x=Math.abs(x);const t=1/(1+.3275911*x);return s*(1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x))};
+const Phi=z=>.5*(1+erf(z/Math.SQRT2)),t4=z=>Math.round(Phi(z)*1e4)/1e4,pct=z=>Math.round(t4(z)*100);
+const pdf=z=>Math.exp(-z*z/2)/Math.sqrt(2*Math.PI),f2=z=>(Math.round(z*100)/100).toFixed(2).replace('-','−'),d4=v=>v.toFixed(4),r2=v=>Math.round(v*100)/100;
+const nm=v=>(Math.round(v*100)/100).toString();
+function draw(id,o){const W=640,X=z=>40+(z+4)/8*560,Y=z=>180-pdf(z)/.4*150;let a=Math.max(-4,o.a??0),b=Math.min(4,o.b??0),c='',pts=[];
+for(let z=-4;z<=4.001;z+=.1)pts.push(X(z)+','+Y(z));
+if(o.a!==undefined&&b>a){let sh=[];for(let z=a;z<=b+.001;z+=.05)sh.push(X(Math.min(z,b))+','+Y(Math.min(z,b)));c+=`<polygon points="${X(a)},180 ${sh.join(' ')} ${X(b)},180" fill="var(--sh)" opacity=".75"/>`}
+c+=`<polyline points="${pts.join(' ')}" fill="none" stroke="var(--acc)" stroke-width="3"/><line x1="40" y1="180" x2="600" y2="180" stroke="var(--mut)"/><line x1="${X(0)}" y1="25" x2="${X(0)}" y2="180" stroke="var(--mut)" stroke-dasharray="4 4"/>`;
+for(let z=-3;z<=3;z++)c+=`<text x="${X(z)}" y="198" text-anchor="middle" font-size="13" fill="var(--ink)">${z}</text>`+(o.mu!==undefined?`<text x="${X(z)}" y="216" text-anchor="middle" font-size="12" fill="var(--mut)">${nm(o.mu+z*o.sd)}</text>`:'');
+c+=`<text x="620" y="198" font-size="13" fill="var(--ink)" font-weight="800">z</text>`+(o.mu!==undefined?`<text x="620" y="216" font-size="13" fill="var(--mut)" font-weight="800">x</text>`:'');
+if(o.lab)c+=`<text x="${X((a+b)/2)}" y="${o.ly??120}" text-anchor="middle" font-size="18" font-weight="800" fill="#14263d">${o.lab}</text>`;
+$(id).innerHTML=c}
+const S=(s,v)=>`P(${s})`;
+function toggle(sel,fn){$$(sel).forEach(b=>b.onclick=()=>{$$(sel).forEach(x=>x.classList.remove('on'));b.classList.add('on');fn(b)})}
+// nav
+['1 Empirical rule','2 Z-table','3 Left / right','4 x ↔ z','5 Your major','6 Practice'].forEach((t,i)=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>{$$('.pg').forEach(p=>p.classList.remove('on'));$('#p'+i).classList.add('on');$$('#nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');if(i==5&&!$('#pr').innerHTML)newQ();location.hash='s'+i};$('#nav').appendChild(b)});
+// P0
+let K=1;function e0(){const mu=+$('#e_mu').value,sd=+$('#e_sd').value;$('#e_muv').textContent=mu;$('#e_sdv').textContent=sd;const p=pct(K)-pct(-K),P=[68,95,100][K-1],lo=mu-K*sd,hi=mu+K*sd;
+draw('#e_svg',{a:-K,b:K,mu,sd,lab:P+'%'});
+$('#e_st').innerHTML=`<b>In x:</b> P(${lo} &lt; X &lt; ${hi}) <br><b>In z:</b> P(−${K} &lt; Z &lt; ${K}) <br><b>Result:</b> <span class="res">≈ ${[68,95,99.7][K-1]}% ${K==3?'(100% to the nearest whole number)':''}</span><br><small>Table check: ${d4(t4(K)-t4(-K))} → ${P}%. Each tail ≈ ${nm((100-[68,95,99.7][K-1])/2)}%.</small>`}
+$('#e_mu').oninput=$('#e_sd').oninput=e0;toggle('#p0 [data-k]',b=>{K=+b.dataset.k;e0()});
+$('#e_pre').onchange=()=>{const[m,s]=$('#e_pre').value.split(',');$('#e_mu').value=m;$('#e_sd').value=s;e0()};e0();
+// P1
+function z1(v){let z=Math.max(-3.49,Math.min(3.49,+v||0));z=Math.round(z*100)/100;$('#z_in').value=z;$('#z_rg').value=z;const a=Math.abs(z),ri=Math.floor(a*10+1e-9),cc=Math.round(a*100-ri*10),sg=z<0?-1:1;
+draw('#z_svg',{a:-4,b:z,lab:d4(t4(z)),ly:140});
+$('#z_st').innerHTML=`z = ${f2(z)} → row <b>${z<0?'−':''}${(ri/10).toFixed(1)}</b>, column <b>.0${cc}</b> → area to the left = <span class="res">${d4(t4(z))}</span> = ${(t4(z)*100).toFixed(2)}% ≈ <b>${pct(z)}%</b>`;
+let rows=[ri-1,ri,ri+1].filter(k=>k>=0&&k<=34);rows.sort((p,q)=>sg*(p-q));
+let h='<table class="t"><tr><th>z</th>'+[...Array(10).keys()].map(c=>`<th>.0${c}</th>`).join('')+'</tr>';
+rows.forEach(k=>{h+=`<tr><th>${sg<0?'−':''}${(k/10).toFixed(1)}</th>`+[...Array(10).keys()].map(c=>`<td class="${k==ri&&c==cc?'hl':''}">${d4(t4(sg*(k/10+c/100)))}</td>`).join('')+'</tr>'});$('#z_tb').innerHTML=h+'</table>'}
+$('#z_in').onchange=e=>z1(e.target.value);$('#z_rg').oninput=e=>z1(e.target.value);z1(1.04);
+// P2
+let M='L';function l2(){const a=r2(+$('#l_a').value||0),b=r2(+$('#l_b').value||0);$('#l_b2').style.display=M=='B'?'':'none';let A,B,st,lo,hi,fin;const pa=t4(a),pb=t4(b);
+if(M=='L'){lo=-4;hi=a;fin=pct(a);st=`P(Z &lt; ${f2(a)})`;A=`Decimals first<br>Table: ${d4(pa)}<br>Convert: ${d4(pa)} × 100 = ${(pa*100).toFixed(2)}%<br>Round: <span class="res">${fin}%</span>`;B=`Percent first<br>Table: ${d4(pa)} = ${(pa*100).toFixed(2)}%<br>Round: <span class="res">${fin}%</span>`}
+else if(M=='R'){lo=a;hi=4;fin=Math.round((1-pa)*100);st=`P(Z &gt; ${f2(a)}) = 1 − P(Z &lt; ${f2(a)})`;A=`Decimals first<br>Table: ${d4(pa)}<br>1 − ${d4(pa)} = ${d4(1-pa)}<br>× 100 = ${((1-pa)*100).toFixed(2)}% → <span class="res">${fin}%</span>`;B=`Percent first<br>Table: ${d4(pa)} = ${(pa*100).toFixed(2)}%<br>100% − ${(pa*100).toFixed(2)}% = ${(100-pa*100).toFixed(2)}%<br>→ <span class="res">${fin}%</span>`}
+else{const lw=Math.min(a,b),up=Math.max(a,b),pl=t4(lw),pu=t4(up);lo=lw;hi=up;fin=Math.round((pu-pl)*100);st=`P(${f2(lw)} &lt; Z &lt; ${f2(up)}) = P(Z &lt; ${f2(up)}) − P(Z &lt; ${f2(lw)})`;A=`Decimals first<br>${d4(pu)} − ${d4(pl)} = ${d4(pu-pl)}<br>× 100 = ${((pu-pl)*100).toFixed(2)}% → <span class="res">${fin}%</span>`;B=`Percent first<br>${(pu*100).toFixed(2)}% − ${(pl*100).toFixed(2)}% = ${((pu-pl)*100).toFixed(2)}%<br>→ <span class="res">${fin}%</span>`}
+draw('#l_svg',{a:lo,b:hi,lab:fin+'%'});$('#l_st').innerHTML=`<b>In z:</b> ${st} = <span class="res">${fin}%</span>`;$('#l_A').innerHTML='<b>Method A</b> ✏️<br>'+A.replace('Decimals first<br>','Decimals first<br>');$('#l_B').innerHTML='<b>Method B</b> ✏️<br>'+B}
+toggle('#p2 [data-m]',b=>{M=b.dataset.m;l2()});$('#l_a').oninput=$('#l_b').oninput=l2;l2();
+// reverse + forward solutions
+function revZ(T){let best=0,bd=9;for(let i=-349;i<=349;i++){const d=Math.abs(t4(i/100)-T);if(d<bd-1e-12){bd=d;best=i/100}}return best}
+function solRev(mu,sd,p,top){const T=top?1-p/100:p/100,z=revZ(T),x=mu+z*sd,u=top?'right':'left';
+return{z,x,html:`<div class="m"><b>Step 1 – Sketch.</b> Shade the ${top?'top':'bottom'} ${p}% (the ${u} tail).<br><b>Step 2 – Table area.</b> The table gives area to the <i>left</i>: ${top?`100% − ${p}% = ${100-p}%`:`${p}%`} = ${d4(T)}.<br><b>Step 3 – Find z.</b> Nearest table entry to ${d4(T)} is ${d4(t4(z))}, so <b>z = ${f2(z)}</b>.<br><b>Step 4 – Convert.</b> x = μ + zσ = ${mu} + (${f2(z)})(${sd}) = <span class="res">${nm(x)}</span><br><b>In symbols:</b> P(X ${top?'&gt;':'&lt;'} ${nm(x)}) = P(Z ${top?'&gt;':'&lt;'} ${f2(z)}) = ${p}%</div>`}}
+function solFwd(mu,sd,x,top){const z=r2((x-mu)/sd),L=t4(z),P=Math.round((top?1-L:L)*100);
+return{z,P,html:`<div class="m"><b>Step 1 – Sketch</b> the ${top?'right':'left'} of x = ${x}.<br><b>Step 2 – z-score.</b> z = (${x} − ${mu}) ÷ ${sd} = <b>${f2(z)}</b><br><b>Step 3 – Table:</b> area left of ${f2(z)} = ${d4(L)}.<br><b>Step 4 – Percent.</b> ${top?`Decimals: 1 − ${d4(L)} = ${d4(1-L)} → ${((1-L)*100).toFixed(2)}%<br>Percents: 100% − ${(L*100).toFixed(2)}% = ${((1-L)*100).toFixed(2)}%`:`${d4(L)} × 100 = ${(L*100).toFixed(2)}%`} → <span class="res">${P}%</span><br><b>In symbols:</b> P(X ${top?'&gt;':'&lt;'} ${x}) = P(Z ${top?'&gt;':'&lt;'} ${f2(z)}) = ${P}%</div>`}}
+let T='F';function r3(){const mu=+$('#r_mu').value,sd=+$('#r_sd').value||1,top=$('#r_d').value=='top';
+if(T=='F'){const x=+$('#r_x').value,s=solFwd(mu,sd,x,top);draw('#r_svg',{mu,sd,a:top?s.z:-4,b:top?4:s.z,lab:s.P+'%'});$('#r_sol').innerHTML=s.html}
+else{const p=Math.min(99,Math.max(1,Math.round(+$('#r_p').value))),s=solRev(mu,sd,p,top);draw('#r_svg',{mu,sd,a:top?s.z:-4,b:top?4:s.z,lab:p+'%'});$('#r_sol').innerHTML=s.html+`<div class="tip">Worksheet check: μ=100, σ=12, top 30% → lowest IQ ≈ 106.</div>`}}
+function r3o(){$('#r_d').innerHTML=T=='F'?'<option value="top">P(X &gt; x) right</option><option value="bot">P(X &lt; x) left</option>':'<option value="top">top p% (highest)</option><option value="bot">bottom p% (lowest)</option>';$('#r_xw').style.display=T=='F'?'':'none';$('#r_pw').style.display=T=='V'?'':'none';r3()}
+toggle('#p3 [data-t]',b=>{T=b.dataset.t;r3o()});['#r_mu','#r_sd','#r_x','#r_p','#r_d'].forEach(s=>$(s).oninput=r3);r3o();
+// P4
+const MJ=[['🧠 Psychology','A standardised anxiety scale gives scores that are normally distributed with μ = 50 and σ = 10. The top 15% of scorers are referred for follow-up. What is the minimum score that earns a referral?',50,10,15,1,'points'],
+['👥 Sociology','Daily time on social media in a community survey is normally distributed with μ = 150 minutes and σ = 40 minutes. The lowest 20% of users are labelled “low users”. What is the maximum number of minutes for a low user?',150,40,20,0,'minutes'],
+['🌎 Environmental Science','Annual rainfall at a monitoring station is normally distributed with μ = 1800 mm and σ = 250 mm. The driest 10% of years are classed as drought years. Below what rainfall is a year a drought year?',1800,250,10,0,'mm'],
+['🩺 Nursing','Resting heart rate in a patient group is normally distributed with μ = 72 bpm and σ = 9 bpm. The top 20% are flagged for extra monitoring. What is the minimum heart rate that gets flagged?',72,9,20,1,'bpm']];
+function mj(i){$$('#mj_tabs button').forEach((b,j)=>b.classList.toggle('on',i==j));const[n,q,mu,sd,p,top,u]=MJ[i],s=solRev(mu,sd,p,top);
+$('#mj').innerHTML=`<p>${q}</p><svg id="mjs" viewBox="0 0 640 230"></svg><div class="row">Probability as a percent: ${p}% (given). Your z = <input type="number" id="m_z" step="0.01"> Your x (nearest whole number) = <input type="number" id="m_x" step="1"> ${u} <button class="b pri" id="m_c">Check</button></div><div id="m_f"></div>`;draw('#mjs',{mu,sd});
+$('#m_c').onclick=()=>{const z=+$('#m_z').value,x=+$('#m_x').value,okz=Math.abs(z-s.z)<.0051,okx=Math.abs(x-s.x)<=1;draw('#mjs',{mu,sd,a:top?s.z:-4,b:top?4:s.z,lab:p+'%'});
+$('#m_f').innerHTML=`<div class="fb ${okz&&okx?'ok':'no'}">${okz&&okx?'✅ Correct!':'Not quite — '+(okz?'z is right, check x = μ + zσ.':'check your z first. Tip: the table shows area to the LEFT.')}</div>`+s.html}}
+MJ.forEach((m,i)=>{const b=document.createElement('button');b.className='b';b.textContent=m[0];b.onclick=()=>mj(i);$('#mj_tabs').appendChild(b)});mj(0);
+// P5
+let Q,sc=0,tot=0,mode=null;const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const CTX=[['IQ scores',100,15,''],['commute times',35,8,' min'],['sleep hours per week',49,5,' h'],['resting heart rates',72,9,' bpm'],['exam marks',65,12,'%']];
+function newQ(){const k=R(0,3);let q;
+if(k==0){const t=R(0,3),mu=R(5,20)*5,sd=R(2,6)*2;q=[{t:`Scores are normal with μ = ${mu}, σ = ${sd}. What percent lie between ${mu-sd} and ${mu+sd}?`,ans:68,reg:'B',a:-1,b:1,mu,sd,sol:`μ ± 1σ → 68%`},{t:`Scores are normal with μ = ${mu}, σ = ${sd}. What percent lie between ${mu-2*sd} and ${mu+2*sd}?`,ans:95,reg:'B',a:-2,b:2,mu,sd,sol:`μ ± 2σ → 95%`},{t:`Scores are normal with μ = ${mu}, σ = ${sd}. What percent are above ${mu+sd}?`,ans:16,reg:'R',a:1,b:4,mu,sd,sol:`(100% − 68%) ÷ 2 = 16%`},{t:`Scores are normal with μ = ${mu}, σ = ${sd}. What percent are below ${mu-sd}?`,ans:16,reg:'L',a:-4,b:-1,mu,sd,sol:`(100% − 68%) ÷ 2 = 16%`}][t];Q={...q,kind:'p'}}
+else if(k==1){const z=R(-24,24)/10+R(0,9)/100,rg=Math.random()<.5?'L':'R',zz=r2(z),a=pct(zz),ans=rg=='L'?a:Math.round((1-t4(zz))*100);q={t:`Find the probability P(Z ${rg=='L'?'&lt;':'&gt;'} ${f2(zz)}) as a percent.`,ans,reg:rg,a:rg=='L'?-4:zz,b:rg=='L'?zz:4,sol:`Table: ${d4(t4(zz))}. ${rg=='R'?'1 − that = '+d4(1-t4(zz))+'. ':''}→ ${ans}%`,kind:'p'};Q=q}
+else if(k==2){const c=CTX[R(0,4)],rg=Math.random()<.5?'L':'R',x=Math.round(c[1]+R(-20,20)/10*c[2]),s=solFwd(c[1],c[2],x,rg=='R');Q={t:`${c[0]} are normal with μ = ${c[1]}, σ = ${c[2]}. What percent have a value ${rg=='R'?'above':'below'} ${x}${c[3]}?`,ans:s.P,reg:rg,a:rg=='L'?-4:s.z,b:rg=='L'?s.z:4,mu:c[1],sd:c[2],sol:s.html,kind:'p'}}
+else{const c=CTX[R(0,4)],p=[10,15,20,25,30,40][R(0,5)],top=Math.random()<.5,s=solRev(c[1],c[2],p,top);Q={t:`${c[0]} are normal with μ = ${c[1]}, σ = ${c[2]}. What is the ${top?'minimum value of the top':'maximum value of the bottom'} ${p}%? (nearest whole number)`,ans:s.x,reg:top?'R':'L',a:top?s.z:-4,b:top?4:s.z,mu:c[1],sd:c[2],sol:s.html,kind:'x'}}
+mode=null;$('#pr').innerHTML=`<p>${Q.t}</p><svg id="pr_s" viewBox="0 0 640 230"></svg><div class="row">Sketch: <button class="b" data-s="L">Left tail</button><button class="b" data-s="R">Right tail</button><button class="b" data-s="B">Middle</button></div><div class="row">${Q.kind=='p'?'Answer (%): <input type="text" id="pr_a" placeholder="e.g. 84"> %':'x = <input type="text" id="pr_a">'} <button class="b pri" id="pr_c">Check</button></div><div id="pr_f"></div>`;draw('#pr_s',{});
+$$('#pr [data-s]').forEach(b=>b.onclick=()=>{mode=b.dataset.s;$$('#pr [data-s]').forEach(x=>x.classList.toggle('on',x==b));const a=Q.a,bb=Q.b,zb=Q.reg=='B'?[-1,1]:null;let lo,hi;const bd=Q.reg=='L'?Q.b:Q.reg=='R'?Q.a:null;
+if(mode=='L'){lo=-4;hi=bd??Q.b}else if(mode=='R'){lo=bd??Q.a;hi=4}else{lo=Q.a;hi=Q.b;if(Q.reg!='B'){lo=-Math.abs(bd);hi=Math.abs(bd)}}draw('#pr_s',{a:lo,b:hi})});
+$('#pr_c').onclick=()=>{const raw=$('#pr_a').value.trim(),v=parseFloat(raw);let fb;if(isNaN(v)){return}
+if(Q.kind=='p'&&(raw.includes('.')||(v>0&&v<1&&Q.ans>1))){fb=`<div class="fb no">⚠️ That looks like a decimal or a z-score. Give the probability as a <b>percent</b> to the nearest whole number (e.g. 84, not 0.84).</div>`}
+else{tot++;const ok=Q.kind=='p'?v===Q.ans:Math.abs(v-Q.ans)<=1,sk=mode==Q.reg;if(ok)sc++;$('#pr_sc').textContent=sc+' / '+tot;draw('#pr_s',{a:Q.a,b:Q.b,mu:Q.mu,sd:Q.sd,lab:Q.kind=='p'?Q.ans+'%':''});
+fb=`<div class="fb ${ok?'ok':'no'}">${ok?'✅ Correct':'❌ The answer is '+(Q.kind=='p'?Q.ans+'%':nm(Q.ans))}${mode?(sk?' · sketch ✓':' · check your shaded region'):' · remember to sketch first!'}</div><div class="m">${Q.sol.startsWith('<')?Q.sol:Q.sol}</div>`}
+$('#pr_f').innerHTML=fb}}
+$('#pr_new').onclick=newQ;
+$('#nav button').click();
+</script></body></html>
